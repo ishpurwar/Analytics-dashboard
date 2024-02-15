@@ -1,21 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-import { analytics } from "./utils/analytics";
+import { NextRequest, NextResponse } from 'next/server'
+import { analytics } from './utils/analytics'
 
 export default async function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname === "/") {
-    //trackin analytics events
+  if (req.nextUrl.pathname === '/') {
     try {
-      analytics.track("pageview", {
-        page: "/",
+      analytics.track('pageview', {
+        page: '/',
         country: req.geo?.country,
-      });
-    } catch (error) {
-      console.log(error);
+      })
+    } catch (err) {
+      // fail silently to not affect request
+      console.error(err)
     }
-    return NextResponse.next();
   }
+
+  return NextResponse.next()
 }
 
 export const matcher = {
-  matcher: "/",
-};
+  matcher: ['/'],
+}
